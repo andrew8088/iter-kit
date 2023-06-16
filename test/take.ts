@@ -1,17 +1,14 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it } from 'vitest'
 import { take } from '../src/take';
-
-function* numbers() {
-    let i = 0;
-    while (true) yield i++;
-}
+import { range } from '../src/range';
+import { expectArray } from './testUtils';
 
 describe('take', () => {
     it('chooses a number of elements', () => {
-        expect(Array.from(take(numbers(), 2))).toEqual([0, 1]);
+        expectArray(take(range(), 2), [0, 1]);
     });
 
     it('ends early if the Iterator has fewer elements than needed', () => {
-        expect(Array.from(take(take(numbers(), 2), 3))).toEqual([0, 1]);
+        expectArray(take(take(range(), 2), 3), [0, 1]);
     });
 });
