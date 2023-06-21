@@ -1,7 +1,6 @@
-export function* takeUntil<T>(iter: Iterator<T>, fn: (t: T) => boolean) {
-    while (true) {
-        const next = iter.next();
-        if (next.done || !fn(next.value)) return;
-        yield next.value;
+export function* takeUntil<T>(iter: Iterable<T>, fn: (t: T) => boolean) {
+    for (const next of iter) {
+        if (!fn(next)) return;
+        yield next;
     }
 }

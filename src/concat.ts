@@ -1,8 +1,5 @@
-import { toIterable } from './util/toIterable';
-
-export function* concat<T>(...iters: Array<Iterator<T>>) {
+export function* concat<T>(...iters: Array<Iterable<T>>) {
     for (const iter of iters) {
         yield* iter;
     }
 }
-

@@ -1,7 +1,5 @@
-export function* map<T, R>(iter: Iterator<T>, fn: (t: T) => R) {
-    while (true) {
-        const next = iter.next();
-        if (next.done) return;
-        yield fn(next.value);
+export function* map<T, R>(iter: Iterable<T>, fn: (t: T) => R) {
+    for (const item of iter) {
+        yield fn(item);
     }
 }
