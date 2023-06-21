@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest'
-import { toAsync } from '../../src/util/toAsync';
-import { range } from '../../src/range';
-import { expectAsyncArray } from '../testUtils';
+import { toAsync } from '../src/utils';
+import { range } from '../src/sync';
+import { expectAsyncArray } from './testUtils';
 
 describe('toAsync', () => {
     it('wraps items from an iterator in promises', async () => {
