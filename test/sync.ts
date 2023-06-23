@@ -6,8 +6,9 @@ import {
   filter,
   map,
   take,
-  takeUntil,
+  takeWhile,
   zip,
+  pipe,
 } from "../src/sync";
 import { expectArray } from "./testUtils";
 
@@ -88,7 +89,7 @@ describe("sync", () => {
   describe("takeUntil", () => {
     it("takes values until one matches a predicate", () => {
       expectArray(
-        takeUntil(concat(range(0, 3), range(0, 3)), (n) => n < 3),
+        takeWhile(concat(range(0, 3), range(0, 3)), (n) => n < 3),
         [0, 1, 2]
       );
     });
@@ -104,6 +105,33 @@ describe("sync", () => {
         [0, "a"],
         [1, "b"],
       ]);
+    });
+  });
+
+  describe("pipe", () => {
+    it("pipes", () => {
+      const noPipe = filter(
+        map(
+          zip(
+            take(range(1, 10), 5),
+            takeWhile(
+              chars("a", "j"),
+              (c) => c.charCodeAt(0) <= "e".charCodeAt(0)
+            )
+          ),
+          ([n, s]) => "".padStart(n, s)
+        ),
+        (s) => s.includes("c")
+      );
+
+      const withPipe = pipe(chars("a", "j"))
+        .takeWhile((c) => c.charCodeAt(0) <= "e".charCodeAt(0))
+        .zip(pipe(range(1, 10)).take(5))
+        .map(([s, n]) => "".padStart(n, s))
+        .filter((s) => s.includes("c"));
+
+      expectArray(noPipe, ["ccc"]);
+      expectArray(withPipe, ["ccc"]);
     });
   });
 });

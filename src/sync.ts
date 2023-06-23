@@ -40,7 +40,7 @@ export function* take<T>(iter: I<T>, count: number) {
   }
 }
 
-export function* takeUntil<T>(iter: I<T>, fn: (t: T) => boolean) {
+export function* takeWhile<T>(iter: I<T>, fn: (t: T) => boolean) {
   for (const next of iter) {
     if (!fn(next)) return;
     yield next;
@@ -75,4 +75,44 @@ export function* zip<T>(...iters: Array<I<T>>): I<T[]> {
 
     yield nextTuple;
   }
+}
+
+class Chainable<T> implements Iterable<T> {
+  #iter: Iterable<T>;
+
+  constructor(iter: Iterable<T>) {
+    this.#iter = iter;
+  }
+
+  take(count: number) {
+    return new Chainable(take(this.#iter, count));
+  }
+
+  takeWhile(fn: (t: T) => boolean) {
+    return new Chainable(takeWhile(this.#iter, fn));
+  }
+
+  concat(...iters: Iterable<T>[]) {
+    return new Chainable(concat(this.#iter, ...iters));
+  }
+
+  filter(fn: (t: T) => boolean) {
+    return new Chainable(filter(this.#iter, fn));
+  }
+
+  map<S>(fn: (t: T) => S) {
+    return new Chainable(map(this.#iter, fn));
+  }
+
+  zip<S>(iter: Iterable<S>) {
+    return new Chainable(zip(this.#iter, iter));
+  }
+
+  *[Symbol.iterator]() {
+    yield* this.#iter;
+  }
+}
+
+export function pipe<T>(iter: Iterable<T>) {
+  return new Chainable(iter);
 }
