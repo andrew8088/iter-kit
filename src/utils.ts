@@ -3,14 +3,12 @@ export async function* toAsync<T>(iter: Iterable<T>): AsyncIterable<T> {
     yield await Promise.resolve(next);
   }
 }
-
 export function curryIter<T, S, Args extends unknown[]>(
   fn: (iter: Iterable<T>, ...rest: Args) => Iterable<S>,
   ...args: Args
 ): (iter: Iterable<T>) => Iterable<S> {
   return (iter: Iterable<T>) => fn(iter, ...args);
 }
-
 export function pipeSync<A, B, C, D>(
   iter: Iterable<A>,
   fn1: (iter: Iterable<A>) => Iterable<B>,
@@ -36,7 +34,6 @@ export function pipeSync(
   }
   return next;
 }
-
 export function pipe<T>(
   iter: AsyncIterable<T>,
   fn: (iter: AsyncIterable<T>) => AsyncIterable<T>
