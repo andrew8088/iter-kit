@@ -55,6 +55,10 @@ export async function* take<T>(iter: I<T>, count: number) {
     if (++yielded === count) return;
   }
 }
+
+/**
+ * takes while the predicate remains true
+ */
 export async function* takeWhile<T>(iter: I<T>, fn: (t: T) => boolean) {
   for await (const next of iter) {
     if (!fn(next)) return;
