@@ -70,6 +70,25 @@ export async function* concat<T>(...iters: Array<I<T>>) {
     yield* iter;
   }
 }
+
+type Tuple<T, N extends number> = [T, T];
+
+export function tee<T, N extends number>(iter: I<T>, n: N = 2): Tuple<I<T>, N> {
+  return [iter, iter];
+}
+// https://github.com/denoland/deno_std/blob/main/async/mux_async_iterator.ts
+
+class Queue<T> implements I<T> {
+  #iter: I<T>;
+
+  constructor(iter: I<T>) {
+    this.#iter = iter;
+  }
+  [Symbol.asyncIterator](): AsyncIterator<T> {
+    throw new Error("Method not implemented.");
+  }
+}
+
 class Chainable<T> implements I<T> {
   #iter: I<T>;
   constructor(iter: I<T>) {

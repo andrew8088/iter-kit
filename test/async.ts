@@ -9,6 +9,7 @@ import {
   takeWhile,
   concat,
   pipe,
+  tee,
 } from "../src/async";
 import { expectAsyncArray } from "./testUtils";
 
@@ -94,6 +95,15 @@ describe("async", () => {
 
       await expectAsyncArray(noPipe, ["ccc"]);
       await expectAsyncArray(withPipe, ["ccc"]);
+    });
+  });
+
+  describe("tee", () => {
+    it("tees 2", async () => {
+      const [i1, i2] = tee(range(0, 2));
+
+      await expectAsyncArray(i1, [0, 1, 2]);
+      await expectAsyncArray(i2, [0, 1, 2]);
     });
   });
 });
